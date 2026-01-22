@@ -7,7 +7,6 @@ git remote add origin https://github.com/wandou1998/alchemy-furnace-se.git
 git branch -M main
 git push -u origin main
 ```
-
 ## 关于打包
 父级项目和dubbo-provider都需要打包
 

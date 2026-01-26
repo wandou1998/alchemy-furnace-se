@@ -28,3 +28,6 @@ git push -u origin main
 ## dubbo api的定义和使用
 在服务端，接口的实现类上要使用@DubboService注册接口
 在消费端，要使用@DubboReference 引用接口，而不能直接使用spring的注解
+
+## java.lang.IllegalStateException: Failed to introspect Class [com.lee.af.service.DemoDubboServiceImpl] from ClassLoader [jdk.internal.loader.ClassLoaders$AppClassLoader@73d16e93]
+以上报错是因为更改过dubbo的包版本号，相关的依赖处都应该同步更新版本号

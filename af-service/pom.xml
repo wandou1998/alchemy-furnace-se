@@ -12,7 +12,7 @@
         <dependency>
             <groupId>com.lee</groupId>
             <artifactId>af-dubbo</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

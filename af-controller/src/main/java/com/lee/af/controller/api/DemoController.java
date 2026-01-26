@@ -18,6 +18,8 @@ public class DemoController {
 
     @RequestMapping("/hello")
     public String hello() {
-        return service1.sayHello("World");
+
+//       return service1.sayHello("World");
+        return demoDubboService.sayHello("World");
     }
 }

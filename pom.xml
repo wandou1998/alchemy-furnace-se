@@ -38,14 +38,30 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.gson</groupId>
+                    <artifactId>gson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.datatype</groupId>
+                    <artifactId>jackson-datatype-jsr310</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 <!--        dubbo 相关包  start-->
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-bom</artifactId>
-            <version>3.3.6</version>
+            <version>3.3.4</version>
             <type>pom</type>
             <scope>import</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                    <artifactId>fastjson2</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -66,11 +82,45 @@
         <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
-            <version>3.3.6</version>
+            <version>3.3.4</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.fastjson2</groupId>-->
+<!--            <artifactId>fastjson2</artifactId>-->
+<!--            <version>2.0.8</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version> <!-- 与Dubbo 3.3.4兼容的稳定版 -->
+            <scope>compile</scope> <!-- 必须为compile，确保运行时可见 -->
         </dependency>
 
-        <!--        dubbo 相关包  end-->
+        <!-- Gson核心依赖 -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version> <!-- 稳定版，兼容Java 8+ -->
+            <scope>compile</scope> <!-- 必须为compile，确保运行时可见 -->
+        </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.2</version>
+            <scope>compile</scope> <!-- 仅测试时有效，运行时缺失 -->
+        </dependency>
+
+
+        <!-- 2. Dubbo FastJSON序列化器（若使用fastjson作为Dubbo序列化方式） -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.dubbo</groupId>-->
+<!--            <artifactId>dubbo-serialization-fastjson</artifactId>-->
+<!--            <version>3.3.4</version> &lt;!&ndash; 与Dubbo版本严格一致 &ndash;&gt;-->
+<!--        </dependency>-->
+
+        <!--        dubbo 相关包  end-->
     </dependencies>
 
     <build>

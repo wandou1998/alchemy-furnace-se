@@ -7,14 +7,21 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>af-controller</artifactId>
-    <name>Archetype - af-controller</name>
-    <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
             <groupId>com.lee</groupId>
             <artifactId>af-dubbo</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.lee</groupId>
+            <artifactId>af-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 </project>

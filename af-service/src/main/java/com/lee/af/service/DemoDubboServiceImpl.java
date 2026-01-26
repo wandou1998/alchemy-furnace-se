@@ -2,6 +2,7 @@ package com.lee.af.service;
 
 import com.lee.af.dubbo.service.DemoDubboService;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 //@DubboService

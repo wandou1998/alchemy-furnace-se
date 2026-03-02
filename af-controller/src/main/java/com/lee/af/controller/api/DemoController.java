@@ -1,9 +1,11 @@
 package com.lee.af.controller.api;
 
+import com.lee.af.controller.annotation.Log;
 import com.lee.af.controller.service.Service1;
 import com.lee.af.dubbo.service.DemoDubboService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,5 +48,10 @@ public class DemoController {
     //      return service1.sayHello("World");
        return demoDubboService.sayHello("World");
        **/
+    }
+    @Log
+    @GetMapping("/addLog")
+    public String logRecord() {
+        return "SUCCESS";
     }
 }

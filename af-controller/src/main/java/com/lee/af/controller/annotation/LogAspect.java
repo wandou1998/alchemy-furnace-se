@@ -51,7 +51,7 @@ public class LogAspect {
         operLog.setOperTime(LocalDateTime.now());
 
         try {
-            // 1. 执行业务逻辑
+            // 1. 执行业务逻辑 如果不调用该方法，则业务逻辑（目标方法）则不会执行
             Object result = joinPoint.proceed();
 
             // 2. 设置响应结果

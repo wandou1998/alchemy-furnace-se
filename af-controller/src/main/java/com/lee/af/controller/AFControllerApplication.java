@@ -5,13 +5,15 @@ import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.util.Arrays;
 
-@SpringBootApplication(scanBasePackages = {"com.lee.af"})
+@SpringBootApplication(scanBasePackages = {"com.lee.af"},
+        exclude = {DataSourceAutoConfiguration.class} )
 @EnableDubbo
 //@ComponentScan(basePackages = {"com.lee.af.service","com.lee.af.controller"})
 public class AFControllerApplication {

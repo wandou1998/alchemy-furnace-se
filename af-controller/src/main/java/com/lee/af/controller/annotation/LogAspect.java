@@ -29,7 +29,7 @@ public class LogAspect {
 //    @Autowired
 //    private OperLogMapper operLogMapper;
 
-    // ！！！！！ 配置织入点 ！！！！！
+    // ！！！！！ 配置织入点 ！！！！！Pointcut
     @Pointcut("@annotation(com.lee.af.controller.annotation.Log)")
     public void logPointCut() {}
 

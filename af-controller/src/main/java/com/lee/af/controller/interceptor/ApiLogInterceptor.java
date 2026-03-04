@@ -1,9 +1,16 @@
 package com.lee.af.controller.interceptor;
 
+import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lee.af.controller.wrapper.ContentCachingRequestWrapper;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +24,7 @@ import java.util.Enumeration;
 @Component
 public class ApiLogInterceptor implements HandlerInterceptor {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private static final String START_TIME_ATTRIBUTE_NAME = "startTime";
 
     /**
@@ -33,43 +41,43 @@ public class ApiLogInterceptor implements HandlerInterceptor {
         log.info("========================================== Start ==========================================");
         log.info("开始记录请求：URL : {}, HTTP Method : {}, IP : {}, Class Method  : {}", request.getRequestURL(),request.getMethod(), request.getRemoteAddr(), handler);
 
+
         // 打印请求参数
+        // 转换为自定义的RequestWrapper
+        ContentCachingRequestWrapper wrappedRequest = (ContentCachingRequestWrapper) request;
+        String requestBody = wrappedRequest.getBody();
+        String requestParameters = "";
+        String contentType = request.getContentType();
+        // 判断是否为 JSON 请求
+        boolean isJson = contentType != null && contentType.contains("application/json");
         /** 如果请求是 POST/PUT 且 Content-Type 为 application/json，
          * 参数在 Request Body 中。由于 InputStream 只能读取一次，
          * 如果在拦截器中读取了 Body，Controller 层就无法再读取，会导致报错。
          **/
         String method = request.getMethod();
-        if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
-//            Object[] Parameters = ((HandlerMethod) handler).getMethodParameters();
+        if (isJson) {
+            Object jsonParams  = objectMapper.readValue(requestBody, Object.class);
+            log.info("Request Params : {}", jsonParams );
+        } else {
+            if  (contentType != null && contentType.contains("multipart/form-data")) {
+                log.info("过滤文件上传参数，不打印...");
+            } else {
+                Enumeration<String> parameterNames = request.getParameterNames();
+                if (parameterNames.hasMoreElements()) {
+                    StringBuilder params = new StringBuilder();
+                    while (parameterNames.hasMoreElements()) {
+                        String paramName = parameterNames.nextElement();
+                        params.append(paramName).append("=").append(request.getParameter(paramName)).append("&");
+                    }
+                    // 去掉最后一个&
+                    if (params.length() > 0) {
+                        params.deleteCharAt(params.length() - 1);
+                        requestParameters = params.toString();
+                    }
+                }
+                log.info("Request Params : {}", requestParameters);
+            }
         }
-
-//        // 1. 获取 Content-Type
-//        String contentType = request.getContentType();
-//
-//        // 2. 判断是否为 JSON 请求
-//        // 忽略大小写，并处理 contentType 为 null 的情况
-//        boolean isJson = contentType != null && contentType.contains("application/json");
-//
-//        if (!isJson) {
-//            Enumeration<String> parameterNames = request.getParameterNames();
-//            if (parameterNames.hasMoreElements()) {
-//                StringBuilder params = new StringBuilder();
-//                while (parameterNames.hasMoreElements()) {
-//                    String paramName = parameterNames.nextElement();
-//                    params.append(paramName).append("=").append(request.getParameter(paramName)).append("&");
-//                }
-//                // 去掉最后一个&
-//                if (params.length() > 0) {
-//                    params.deleteCharAt(params.length() - 1);
-//                    log.info("Request Params : {}", params);
-//                }
-//            } else {
-//                log.info("Request Params : (None)");
-//            }
-//        } else {
-//            // 如果是 JSON 请求，打印提示，告知参数在 Body 中
-//            log.info("Request Params : (Skipped, see Request Body)");
-//        }
         return true;
     }
 
@@ -93,22 +101,7 @@ public class ApiLogInterceptor implements HandlerInterceptor {
 
         // 打印响应状态和耗时
         //这里只能打印get请求参数 不能打印post请求参数
-        log.info("开始打印返回结果==");
-        Enumeration<String> parameterNames = request.getParameterNames();
-        if (parameterNames.hasMoreElements()) {
-            StringBuilder params = new StringBuilder();
-            while (parameterNames.hasMoreElements()) {
-                String paramName = parameterNames.nextElement();
-                params.append(paramName).append("=").append(request.getParameter(paramName)).append("&");
-            }
-            // 去掉最后一个&
-            if (params.length() > 0) {
-                params.deleteCharAt(params.length() - 1);
-                log.info("Request Params : {}", params);
-            }
-        } else {
-            log.info("Request Params : (None)");
-        }
+        log.info("开始打印返回结果==========");
         log.info("Response Status: {}", response.getStatus());
         log.info("Time Consuming : {} ms", executeTime);
 
@@ -119,4 +112,5 @@ public class ApiLogInterceptor implements HandlerInterceptor {
 
         log.info("=========================================== End ===========================================");
     }
+
 }

@@ -48,14 +48,14 @@ public class DemoController {
        return demoDubboService.sayHello("World");
        **/
     }
-    @Log
+//    @Log
     @GetMapping("/addLog")
     public String logRecord(@RequestParam String test) {
         log.info("addLog接口开始执行，参数：{}", test);
         return "SUCCESS";
     }
 
-    @Log
+//    @Log
     @PostMapping("/addLogv2")
     public String logRecordv2(@RequestBody  UserDto dto) {
         log.info("logRecordv2接口开始执行，参数：{}", dto.toString());

@@ -19,6 +19,8 @@ import java.util.Enumeration;
 /**
  * API日志拦截器
  * 用于记录HTTP请求的详细信息，包括请求参数、响应状态和执行时间等
+ * -- 代理模式 interceptor基于**AOP（面向切面编程）**实现，通过动态代理（JDK动态代理或CGLIB）在Controller方法执行前后插入拦截逻辑
+ * -- 模板方法模式  Interceptor的preHandle（执行前）、postHandle（执行后）、afterCompletion（完成后）方法构成固定流程骨架，用户只需重写这些方法实现具体逻辑
  */
 @Slf4j
 @Component

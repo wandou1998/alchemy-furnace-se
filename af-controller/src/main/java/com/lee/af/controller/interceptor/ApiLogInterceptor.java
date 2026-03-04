@@ -38,6 +38,10 @@ public class ApiLogInterceptor implements HandlerInterceptor {
          * 参数在 Request Body 中。由于 InputStream 只能读取一次，
          * 如果在拦截器中读取了 Body，Controller 层就无法再读取，会导致报错。
          **/
+        String method = request.getMethod();
+        if ("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method)) {
+//            Object[] Parameters = ((HandlerMethod) handler).getMethodParameters();
+        }
 
 //        // 1. 获取 Content-Type
 //        String contentType = request.getContentType();

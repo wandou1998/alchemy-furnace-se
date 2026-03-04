@@ -4,7 +4,9 @@ package com.lee.af.controller.annotation;
 import com.alibaba.fastjson2.JSON;
 import com.lee.af.entity.OperLog;
 import com.lee.af.utils.IpUtils;
+import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -15,8 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 
@@ -110,8 +115,16 @@ public class LogAspect {
             // 4. 请求参数
             // 过滤掉 HttpServletRequest 和 HttpServletResponse 对象，防止序列化报错
             Object[] args = joinPoint.getArgs();
-            // 这里简单处理，实际生产中可能需要过滤文件上传流等不可序列化的对象
-            operLog.setParams(JSON.toJSONString(args));
+            if ("POST".equalsIgnoreCase(request.getMethod()) || "PUT".equalsIgnoreCase(request.getMethod())) {
+                String params = argsArrayToString(args);
+                operLog.setParams(params);
+                log.info("POST和PUT请求，参数：{}", params);
+            } else {
+                // *** 这里要注意，如果在接口中没有定义参数，此处是不会打印的 ***
+                    log.info("GET请求，参数：{}", JSON.toJSONString(args));
+                operLog.setParams(JSON.toJSONString(args));
+            }
+
 
         } catch (Exception exp) {
             log.error("==前置通知异常==", exp);
@@ -125,6 +138,48 @@ public class LogAspect {
         // return SecurityContextHolder.getContext().getAuthentication().getName(); (Spring Security)
         // return request.getSession().getAttribute("user");
         return "admin"; // 演示用
+    }
+
+    /**
+     * 请求参数拼装
+     *
+     * @param paramsArray
+     * @return
+     */
+    private String argsArrayToString(Object[] paramsArray) {
+        String params = "";
+        if (paramsArray != null && paramsArray.length > 0) {
+            for (int i = 0; i < paramsArray.length; i++) {
+                Object obj = paramsArray[i];
+
+                if (obj instanceof ServletRequest) {
+                    //过滤 不打印
+
+                } else if (obj instanceof HttpServletResponse) {
+                    //过滤 不打印
+
+                } else if (obj instanceof MultipartFile) {
+                    //过滤 不打印
+
+                } else if (obj instanceof Model) {
+                    //过滤 不打印
+
+                } else if (obj instanceof ModelAndView) {
+                    //过滤 不打印
+
+                } else {
+                    try {
+                        if (obj != null && !"".equals(obj)) {
+                            Object jsonObj = JSON.toJSON(obj);
+                            params += jsonObj.toString() + ";";
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return params.trim();
     }
 }
 

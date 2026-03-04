@@ -6,10 +6,7 @@ import com.lee.af.dubbo.service.DemoDubboService;
 import com.lee.af.dubbo.service.dto.UserDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -53,13 +50,15 @@ public class DemoController {
     }
     @Log
     @GetMapping("/addLog")
-    public String logRecord() {
+    public String logRecord(@RequestParam String test) {
+        log.info("addLog接口开始执行，参数：{}", test);
         return "SUCCESS";
     }
 
-
+    @Log
     @PostMapping("/addLogv2")
-    public String logRecordv2(UserDto dto) {
+    public String logRecordv2(@RequestBody  UserDto dto) {
+        log.info("logRecordv2接口开始执行，参数：{}", dto.toString());
         return "SUCCESS";
     }
 }

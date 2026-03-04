@@ -45,7 +45,6 @@ public class ApiLogInterceptor implements HandlerInterceptor {
         // 打印请求参数
         // 转换为自定义的RequestWrapper
         ContentCachingRequestWrapper wrappedRequest = (ContentCachingRequestWrapper) request;
-        String requestBody = wrappedRequest.getBody();
         String requestParameters = "";
         String contentType = request.getContentType();
         // 判断是否为 JSON 请求
@@ -56,7 +55,8 @@ public class ApiLogInterceptor implements HandlerInterceptor {
          **/
         String method = request.getMethod();
         if (isJson) {
-            Object jsonParams  = objectMapper.readValue(requestBody, Object.class);
+            String requestBody = wrappedRequest.getBody(); //使用重写的ContentCachingRequestWrapper读取请求体 可多次读取
+            Object jsonParams  = objectMapper.readValue(requestBody, Object.class);  //读取参数
             log.info("Request Params : {}", jsonParams );
         } else {
             if  (contentType != null && contentType.contains("multipart/form-data")) {

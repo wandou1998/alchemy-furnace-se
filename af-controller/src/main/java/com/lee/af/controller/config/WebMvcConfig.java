@@ -13,6 +13,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 
+/**
+ * WebMvcConfig配置类
+ * 实现WebMvcConfigurer接口，用于配置Spring MVC的拦截器和过滤器
+ */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
@@ -32,7 +36,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         @Override
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                 throws IOException, ServletException {
-            // 仅对HTTP请求生效
+            // 仅对HTTP请求生效 替换Request为ContentCachingRequestWrapper
             if (request instanceof HttpServletRequest httpRequest) {
                 ContentCachingRequestWrapper wrappedRequest = new ContentCachingRequestWrapper(httpRequest);
                 chain.doFilter(wrappedRequest, response);

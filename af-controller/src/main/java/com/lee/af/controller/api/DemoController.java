@@ -4,6 +4,9 @@ import com.lee.af.controller.annotation.Log;
 import com.lee.af.controller.service.Service1;
 import com.lee.af.dubbo.service.DemoDubboService;
 import com.lee.af.dubbo.service.dto.UserDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RestController
 @RequestMapping("/demo")
+@Tag(name = "demo", description = "接口测试类")
 public class DemoController {
 
     @Autowired
@@ -21,7 +25,7 @@ public class DemoController {
     @Autowired
     private Service1 service1;
 
-    @RequestMapping("/hello")
+    @GetMapping("/hello")
     public String hello() {
         //以下为通过CodeGeeX生成的代码
         try {
@@ -50,13 +54,15 @@ public class DemoController {
     }
 //    @Log
     @GetMapping("/addLog")
-    public String logRecord(@RequestParam String test) {
+    @Operation(summary = "get请求", description = "get请求desc")
+    public String logRecord(@RequestParam @Parameter(name="test",description = "测试id", required = true) String test) {
         log.info("addLog接口开始执行，参数：{}", test);
         return "SUCCESS";
     }
 
 //    @Log
     @PostMapping("/addLogv2")
+    @Operation(summary = "post请求", description = "post请求desc")
     public String logRecordv2(@RequestBody  UserDto dto) {
         log.info("logRecordv2接口开始执行，参数：{}", dto.toString());
         return "SUCCESS";
